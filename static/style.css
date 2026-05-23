@@ -1,0 +1,411 @@
+/* ==========================================
+   1. 全体・共通のスタイル
+   ========================================== */
+
+body {
+    font-family: sans-serif;
+    background: #f5f6fa;
+    margin: 0;
+    padding: 30px;
+
+    animation: fadeIn 0.8s ease;
+}
+
+h1 {
+    text-align: center;
+    color: #2d3436;
+    margin-bottom: 40px;
+
+    animation: slideDown 0.7s ease;
+}
+
+/* ==========================================
+   2. レイアウト・グラフ画面用のスタイル
+   ========================================== */
+
+.main {
+    display: flex;
+    gap: 40px;
+    align-items: flex-start;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+/* PC表示時の切り替え */
+@media (min-width: 1200px) {
+    .main {
+        flex-wrap: nowrap;
+    }
+}
+
+/* カード・グラフ要素 */
+
+.chart-card {
+    width: 420px;
+    text-align: center;
+}
+
+.plot-card img {
+    width: 650px;
+    max-width: 100%;
+    border-radius: 15px;
+
+    animation:
+        floatImage 4s ease-in-out infinite,
+        fadeZoom 1s ease;
+}
+
+/* 凡例（データ項目） */
+
+.legend {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #f8f9fa;
+    padding: 10px;
+    border-radius: 10px;
+
+    transition:
+        transform 0.2s,
+        background 0.2s;
+}
+
+.item:hover {
+    background: #dfe6e9;
+
+    transform:
+        translateX(5px);
+}
+
+.color {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+}
+
+/* ==========================================
+   3. 入力画面（フォーム関連）のスタイル
+   ========================================== */
+
+.container {
+    width: 500px;
+    margin: auto;
+    background: white;
+    padding: 30px;
+    border-radius: 20px;
+
+    box-shadow:
+        0 0 15px rgba(0, 0, 0, 0.1);
+
+    animation:
+        cardIn 0.8s ease;
+}
+
+label {
+    font-weight: bold;
+    color: #2d3436;
+    display: block;
+    margin-top: 15px;
+    margin-bottom: 5px;
+}
+
+select,
+input[type="number"] {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #dcdde1;
+    border-radius: 10px;
+    font-size: 16px;
+    box-sizing: border-box;
+
+    transition: 0.25s;
+}
+
+select:focus,
+input[type="number"]:focus {
+
+    border-color: #0984e3;
+
+    outline: none;
+
+    box-shadow:
+        0 0 8px rgba(9, 132, 227, 0.4);
+
+    transform: scale(1.02);
+}
+
+/* フォーム内カード・配置エリア */
+
+.card {
+    background: white;
+    padding: 25px;
+    border-radius: 20px;
+
+    box-shadow:
+        0 0 15px rgba(0, 0, 0, 0.1);
+
+    transition:
+        transform 0.25s,
+        box-shadow 0.25s;
+
+    animation:
+        cardIn 0.7s ease;
+}
+
+.card:hover {
+
+    transform:
+        translateY(-5px);
+
+    box-shadow:
+        0 12px 24px rgba(0, 0, 0, 0.15);
+}
+
+.count-area,
+.base-area {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+}
+
+.pitch-icon {
+    text-align: center;
+    font-size: 60px;
+    margin-bottom: 10px;
+
+    animation:
+        bounceBall 2s infinite;
+}
+
+/* 送信ボタン */
+
+input[type="submit"] {
+    width: 100%;
+    margin-top: 30px;
+    padding: 15px;
+
+    border: none;
+    border-radius: 12px;
+
+    background: #e17055;
+    color: white;
+
+    font-size: 18px;
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.2s,
+        box-shadow 0.2s,
+        background 0.2s;
+}
+
+input[type="submit"]:hover {
+
+    background: #fab1a0;
+
+    transform:
+        translateY(-4px);
+
+    box-shadow:
+        0 10px 18px rgba(225, 112, 85, 0.35);
+}
+
+input[type="submit"]:active {
+
+    transform: scale(0.96);
+}
+
+/* ==========================================
+   4. 結果・スコア表示画面のスタイル
+   ========================================== */
+
+.score {
+    background: white;
+    padding: 20px;
+    border-radius: 15px;
+    margin-bottom: 20px;
+
+    box-shadow:
+        0 0 10px rgba(0, 0, 0, 0.1);
+
+    font-size: 20px;
+
+    animation:
+        fadeZoom 0.8s ease;
+}
+
+.score span {
+    margin-right: 20px;
+    font-weight: bold;
+}
+
+/* テーブル（成績一覧） */
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+
+    box-shadow:
+        0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+th {
+    background: #0984e3;
+    color: white;
+    padding: 12px;
+}
+
+td {
+    padding: 10px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+}
+
+tr {
+    transition:
+        transform 0.15s,
+        background 0.2s;
+}
+
+tr:nth-child(even) {
+    background: #f8f9fa;
+}
+
+tr:hover {
+
+    background: #ffeaa7;
+
+    transform: scale(1.01);
+}
+
+/* 行の背景色（結果別） */
+
+.hit {
+    background: #d4edda !important;
+}
+
+.walk {
+    background: #fff3cd !important;
+}
+
+.out {
+    background: #f8d7da !important;
+}
+
+/* カウント特殊表示 */
+
+.two-strike {
+    border-left: 6px solid #e74c3c;
+}
+
+.three-ball {
+    border-left: 6px solid #2ecc71;
+}
+
+.pitch {
+    font-weight: bold;
+}
+
+/* ==========================================
+   アニメーション
+   ========================================== */
+
+@keyframes fadeIn {
+
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideDown {
+
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes cardIn {
+
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeZoom {
+
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes floatImage {
+
+    0% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-8px);
+    }
+
+    100% {
+        transform: translateY(0px);
+    }
+}
+
+@keyframes bounceBall {
+
+    0% {
+        transform: translateY(0);
+    }
+
+    30% {
+        transform: translateY(-15px);
+    }
+
+    50% {
+        transform: translateY(0);
+    }
+
+    70% {
+        transform: translateY(-8px);
+    }
+
+    100% {
+        transform: translateY(0);
+    }
+}
