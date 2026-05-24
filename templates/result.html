@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <title>検索結果</title>
+
+    <meta charset="UTF-8">
+
+    <link rel="stylesheet" href="{{ url_for('static',filename='style.css') }}">
+
+    <script defer src="{{ url_for('static', filename='pie_char.js') }}">
+    </script>
+</head>
+
+<body>
+
+    <h1>検索結果</h1>
+
+    <div class="score">
+
+        <span>
+            被打率:
+            {{ "%.3f"|format(avg) }}
+        </span>
+
+        <span>
+            被出塁率:
+            {{ "%.3f"|format(obp) }}
+        </span>
+
+        <span>
+            被長打率:
+            {{ "%.3f"|format(slg) }}
+        </span>
+
+        <span>
+            被OPS:
+            {{ "%.3f"|format(ops) }}
+        </span>
+
+    </div>
+
+    <h1>{{ player }} 配球分析</h1>
+
+    <div class="main">
+
+        <div class="card chart-card">
+
+            <h2>球種割合</h2>
+
+            <canvas id="pieChart"
+                    width="350"
+                    height="350">
+            </canvas>
+
+            <div class="legend"
+                 id="legend">
+            </div>
+
+        </div>
+
+        <div class="card plot-card">
+
+            <h2>配球チャート</h2>
+
+            <img src="data:image/png;base64,{{ img_base64 }}">
+
+        </div>
+
+    </div>
+
+    <!-- Flask → JS -->
+    <script>
+        const DATA =
+            {{ data_list | tojson }};
+    </script>
+
+    <br>
+    <br>
+
+    <table>
+
+        <thead>
+
+            <tr>
+                <th>日付</th>
+                <th>投手チーム</th>
+                <th>投手</th>
+                <th>打者チーム</th>
+                <th>打者</th>
+                <th>カウント</th>
+                <th>塁状況</th>
+                <th>球種</th>
+                <th>球速</th>
+                <th>結果</th>
+            </tr>
+
+        </thead>
+
+        <tbody>
+        
+            {% for row in table_rows %}
+        
+            <tr class="{{ row.row_class }}">
+        
+                <td>{{ row.date }}</td>
+                <td>{{ row.pitcher_team }}</td>
+                <td>{{ row.pitcher }}</td>
+                <td>{{ row.batter_team }}</td>
+                <td>{{ row.batter }}</td>
+                <td>{{ row.count }}</td>
+                <td>{{ row.base }}</td>
+        
+                <td class="pitch" style="color:{{ row.pitch_style }}">
+                    {{ row.pitch_type }}
+                </td>
+        
+                <td>{{ row.speed }}km/h</td>
+                <td>{{ row.result }}</td>
+        
+            </tr>
+        
+            {% endfor %}
+        
+        </tbody>
+
+    </table>
+
+</body>
+</html>

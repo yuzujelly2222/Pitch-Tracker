@@ -1,11 +1,10 @@
-from flask import Flask, request, send_file, render_template,url_for
+from flask import Flask, request,render_template,url_for
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker, declarative_base
 from sqlalchemy import Column, Integer, Float, String, Date
 import json
 import matplotlib.pyplot as plt
 import matplotlib.patches as ptc
-import matplotlib
 import matplotlib.patches as mpatches
 import matplotlib.font_manager as fm
 import numpy as np
@@ -16,10 +15,10 @@ def to_int(k):
         return int(k)
     except:
         return -1
-user = "youruser"
-password = "yourpassword"
-host = "yourhost"
-db_name = "yourdbname"
+user = "baseball"
+password = "DIzv_ak79BKO4/hY"
+host = "localhost"
+db_name = "baseball"
 
 # engineの設定
 engine = create_engine(
@@ -136,200 +135,20 @@ def index():
 
 @app.route('/b_input')
 def b_input():
-
-    bs = """
-    <!DOCTYPE html>
-    <html lang="ja">
-    <head>
-    <meta charset="UTF-8">
-    <title>打者側検索フォーム</title>
-    <style>
-
-    body{
-        font-family:sans-serif;
-        background:#f5f6fa;
-        padding:30px;
-    }
-
-    .container{
-        width:500px;
-        margin:auto;
-        background:white;
-        padding:30px;
-        border-radius:20px;
-        box-shadow:0 0 15px rgba(0,0,0,0.1);
-    }
-
-    h1{
-        text-align:center;
-        color:#2d3436;
-        margin-bottom:30px;
-    }
-
-    label{
-        font-weight:bold;
-        color:#2d3436;
-        display:block;
-        margin-top:15px;
-        margin-bottom:5px;
-    }
-
-    select,
-    input[type="number"]{
-        width:100%;
-        padding:12px;
-        border:1px solid #dcdde1;
-        border-radius:10px;
-        font-size:16px;
-        box-sizing:border-box;
-        transition:0.2s;
-    }
-
-    select:focus,
-    input[type="number"]:focus{
-        border-color:#0984e3;
-        outline:none;
-        box-shadow:0 0 5px rgba(9,132,227,0.4);
-    }
-
-    .base-area{
-        display:grid;
-        grid-template-columns:1fr 1fr 1fr;
-        gap:10px;
-    }
-
-    .count-area{
-        display:grid;
-        grid-template-columns:1fr 1fr 1fr;
-        gap:10px;
-    }
-
-    input[type="submit"]{
-        width:100%;
-        margin-top:30px;
-        padding:15px;
-        border:none;
-        border-radius:12px;
-        background:#0984e3;
-        color:white;
-        font-size:18px;
-        font-weight:bold;
-        cursor:pointer;
-        transition:0.2s;
-    }
-
-    input[type="submit"]:hover{
-        background:#74b9ff;
-        transform:scale(1.02);
-    }
-
-    .card{
-        background:#f8f9fa;
-        padding:15px;
-        border-radius:15px;
-        margin-top:20px;
-    }
-
-    </style>
-
-    </head>
-
-    <body>
-
-    <div class="container">
-
-    <h1>打者側フォーム</h1>
-
-    <form action="/b_output" method="post">
-
-    <label for="player">打者選択</label>
-
-    <select name="player" id="player">
-    <option value="">--1つ選択してください--</option>
-    """
-
-    for name in results_b:
-        bs += f'<option value="{name}">{name}</option>'
-
-    bs += """
-
-    </select>
-
-    <div class="card">
-
-        <label>カウント</label>
-
-        <div class="count-area">
-
-            <div>
-                <label>ボール</label>
-                <input type="number" name="bcount" min="-1" max="3" value="-1">
-            </div>
-
-            <div>
-                <label>ストライク</label>
-                <input type="number" name="scount" min="-1" max="2" value="-1">
-            </div>
-
-            <div>
-                <label>アウト</label>
-                <input type="number" name="ocount" min="-1" max="2" value="-1">
-            </div>
-
-        </div>
-
-    </div>
-
-    <div class="card">
-
-        <label>ランナー状況</label>
-
-        <div class="base-area">
-
-            <div>
-                <label>1塁</label>
-                <input type="number" name="fflag" min="-1" max="1" value="-1">
-            </div>
-
-            <div>
-                <label>2塁</label>
-                <input type="number" name="sflag" min="-1" max="1" value="-1">
-            </div>
-
-            <div>
-                <label>3塁</label>
-                <input type="number" name="tflag" min="-1" max="1" value="-1">
-            </div>
-
-        </div>
-        <div class="finish">
-            <div>
-                <label>打席終了球のみ</label>
-                <input type="checkbox" name="finish" value="1">
-            </div>
-        </div>
-
-    </div>
-
-    <input type="submit" value="検索">
-
-    </form>
-
-    </div>
-
-    </body>
-    </html>
-    """
-
-    return bs
+    return render_template(
+        "form.html",
+        results=results_b,
+        side="打者",
+        page="/b_output"
+    )
 
 @app.route('/b_output', methods=["GET", "POST"])
 def b_output():
 
     if request.method == "GET":
         return "エラー"
-
-    batter = request.form['player']
+    table_rows = []
+    player = request.form['player']
 
     bcount = to_int(request.form['bcount'])
     scount = to_int(request.form['scount'])
@@ -339,7 +158,7 @@ def b_output():
     sflag = to_int(request.form['sflag'])
     tflag = to_int(request.form['tflag'])
     finish_flag = to_int(request.form.get('finish','0'))
-    filter_list = [Pitchs.batter == batter]
+    filter_list = [Pitchs.batter == player]
 
     if 0 <= bcount <= 3:
         filter_list.append(Pitchs.ball == bcount)
@@ -370,7 +189,6 @@ def b_output():
     trun = 0
     at_bat = 0
     all_base = 0
-
     obp = 0
     avg = 0
     slg = 0
@@ -388,38 +206,6 @@ def b_output():
         "シンカー": "#795548",
         "特殊球": "#2d3436"
     }
-
-    head_html = f"""
-    <!DOCTYPE html>
-    <html lang="ja">
-    <head>
-    <title>検索結果</title>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" href="{ url_for('static', filename='style.css') }">
-    </head>
-    <body>
-
-    <h1>検索結果</h1>
-    """
-
-    table_html="""
-    <table>
-        <thead>
-            <tr>
-                <th>日付</th>
-                <th>投手チーム</th>
-                <th>投手</th>
-                <th>打者チーム</th>
-                <th>打者</th>
-                <th>カウント</th>
-                <th>塁状況</th>
-                <th>球種</th>
-                <th>球速</th>
-                <th>結果</th>
-            </tr>
-        </thead>
-        <tbody>
-    """
     pitch_dict = {}
     for result in sql_data:
         key = result.result
@@ -456,7 +242,7 @@ def b_output():
         # 成績計算
         trun += 1
 
-        if not (result_category == "walk" or result_category == "sacrifice" or result_category == "sac_bunt_fc"):
+        if not (result_category == "walk" or result_category == "sacrifice" or result_category == "sac_bunt_fc" or result_category == "sac_bunt_error"):
             at_bat += 1
 
         if result_category == "hit":
@@ -467,29 +253,20 @@ def b_output():
             bb += 1
 
         pitch_style = pitch_color.get(result.pitch_type, "#2d3436")
-
-        table_html += f"""
-        <tr class="{row_class}">
-            <td>{date}</td>
-            <td>{result.pitcher_team}</td>
-            <td>{result.pitcher}</td>
-            <td>{result.batter_team}</td>
-            <td>{result.batter}</td>
-            <td>{result.ball}-{result.strike}-{result.outs}</td>
-            <td>{result.third}-{result.second}-{result.first}</td>
-
-            <td class="pitch" style="color:{pitch_style}">
-                {result.pitch_type}
-            </td>
-
-            <td>{result.speed}km/h</td>
-            <td>{result.result}</td>
-        </tr>
-        """
-    table_html += """
-        </tbody>
-    </table>
-    """
+        table_rows.append({
+            "date": date,
+            "pitcher_team": result.pitcher_team,
+            "pitcher": result.pitcher,
+            "batter_team": result.batter_team,
+            "batter": result.batter,
+            "count": f"{result.ball}-{result.strike}-{result.outs}",
+            "base": f"{result.third}-{result.second}-{result.first}",
+            "pitch_type": result.pitch_type,
+            "pitch_style": pitch_style,
+            "speed": result.speed,
+            "result": result.result,
+            "row_class": row_class
+        })
 
     # 成績計算
     if trun:
@@ -500,21 +277,6 @@ def b_output():
         slg = all_base / at_bat
 
     ops = obp + slg
-
-    score_html = f"""
-    <div class="score">
-        <span>打率: {avg:.3f}</span>
-        <span>出塁率: {obp:.3f}</span>
-        <span>長打率: {slg:.3f}</span>
-        <span>OPS: {ops:.3f}</span>
-    </div>
-    """
-
-    head_html = head_html.replace("<h1>検索結果</h1>", f"<h1>検索結果</h1>{score_html}")
-    table_html += """
-    </body>
-    </html>
-    """
     #=======================
     #   プロットと円グラフ  
     #=======================
@@ -593,7 +355,6 @@ def b_output():
 
     plt.xlim(X_MIN, X_MAX)
     plt.ylim(Y_MIN, Y_MAX)
-
     plt.xticks(np.arange(X_MIN, X_MAX + 1, 10))
     plt.yticks(np.arange(Y_MIN, Y_MAX + 1, 10))
 
@@ -610,7 +371,7 @@ def b_output():
     )
 
     plt.title(
-        f"{batter} 配球チャート",
+        f"{player} 配球チャート",
         fontsize=24,
         fontproperties=font_prop
     )
@@ -718,317 +479,26 @@ def b_output():
             ),
             "color": "#b2bec3"
         })
-
-    chart_data = new_chart_data
-
-    data_list_str = json.dumps(
-        chart_data,
-        ensure_ascii=False
+    return render_template(
+    "result.html",
+    avg=avg,
+    obp=obp,
+    slg=slg,
+    ops=ops,
+    player=player,
+    img_base64=img_base64,
+    data_list=new_chart_data,
+    table_rows=table_rows
     )
-    circle_gragh = f"""
-    <h1>{batter} 配球分析</h1>
-
-    <div class="main">
-
-        <div class="card chart-card">
-
-            <h2>球種割合</h2>
-
-            <canvas id="pieChart"
-                    width="350"
-                    height="350">
-            </canvas>
-
-            <div class="legend"
-                 id="legend">
-            </div>
-
-        </div>
-
-        <div class="card plot-card">
-
-            <h2>配球チャート</h2>
-
-            <img
-                src="data:image/png;base64,{img_base64}"
-            >
-
-        </div>
-
-    </div>
-
-    <script>
-
-    const data = {data_list_str};
-
-    const canvas =
-        document.getElementById("pieChart");
-
-    const ctx =
-        canvas.getContext("2d");
-
-    const centerX =
-        canvas.width / 2;
-
-    const centerY =
-        canvas.height / 2;
-
-    const radius = 145;
-
-    // 12時開始
-    let startAngle = -Math.PI / 2;
-
-    data.forEach(item => {{
-
-        const sliceAngle =
-            (item.value / 100)
-            * Math.PI * 2;
-
-        ctx.beginPath();
-
-        ctx.moveTo(
-            centerX,
-            centerY
-        );
-
-        ctx.arc(
-            centerX,
-            centerY,
-            radius,
-            startAngle,
-            startAngle + sliceAngle
-        );
-
-        ctx.closePath();
-
-        ctx.fillStyle =
-            item.color;
-
-        ctx.fill();
-
-        ctx.strokeStyle =
-            "white";
-
-        ctx.lineWidth = 3;
-
-        ctx.stroke();
-
-        // 小さい要素は外側
-        const middleAngle =
-            startAngle + sliceAngle / 2;
-
-        const textRadius =
-            item.value >= 10 ? 90 : 120;
-
-        const textX =
-            centerX
-            + Math.cos(middleAngle) * textRadius;
-
-        const textY =
-            centerY
-            + Math.sin(middleAngle) * textRadius;
-
-        ctx.fillStyle = "white";
-
-        ctx.font =
-            "bold 16px sans-serif";
-
-        ctx.textAlign = "center";
-
-        // 5%以上のみ描画
-        if(item.value >= 5){{
-
-            ctx.fillText(
-                item.value + "%",
-                textX,
-                textY
-            );
-
-        }}
-
-        startAngle += sliceAngle;
-
-    }});
-
-    // ドーナツ化
-    ctx.globalCompositeOperation =
-        "destination-out";
-
-    ctx.beginPath();
-
-    ctx.arc(
-        centerX,
-        centerY,
-        55,
-        0,
-        Math.PI * 2
-    );
-
-    ctx.fill();
-
-    ctx.globalCompositeOperation =
-        "source-over";
-
-    // 中央文字
-    ctx.fillStyle = "#2d3436";
-
-    ctx.font = "bold 20px sans-serif";
-
-    ctx.textAlign = "center";
-
-    ctx.fillText(
-        "球種",
-        centerX,
-        centerY - 5
-    );
-
-    ctx.fillText(
-        "割合",
-        centerX,
-        centerY + 25
-    );
-
-    // 凡例
-    const legend =
-        document.getElementById("legend");
-
-    data.forEach((item, index) => {{
-
-        legend.innerHTML += `
-
-        <div class="item">
-
-            <div class="color"
-                 style="background:${{item.color}}">
-            </div>
-
-            <div>
-
-                <b>
-                    ${{index + 1}}.
-                    ${{item.name}}
-                </b>
-
-                <br>
-
-                ${{item.count}}球
-                (${{item.value}}%)
-
-            </div>
-
-        </div>
-        `;
-    }});
-
-    </script>
-    """
-    
-    return head_html+circle_gragh+"<br><br>"+table_html
 
 @app.route('/p_input')
 def p_input():
-
-    bs = f"""
-    <!DOCTYPE html>
-    <html lang="ja">
-
-    <head>
-    <meta charset="UTF-8">
-    <title>投手側検索フォーム</title>
-    <link rel="stylesheet" href="{ url_for('static', filename='style.css') }">
-
-    </head>
-
-    <body>
-
-    <div class="container">
-
-    <div class="pitch-icon">⚾</div>
-
-    <h1>投手側検索フォーム</h1>
-
-    <form action="/p_output" method="post">
-
-    <label for="player">投手選択</label>
-
-    <select name="player" id="player">
-
-    <option value="">--1つ選択してください--</option>
-    """
-
-    for name in results_p:
-        bs += f'<option value="{name}">{name}</option>'
-
-    bs += """
-
-    </select>
-
-    <div class="card">
-
-        <label>カウント条件</label>
-
-        <div class="count-area">
-
-            <div>
-                <label>ボール</label>
-                <input type="number" name="bcount" min="-1" max="3" value="-1">
-            </div>
-
-            <div>
-                <label>ストライク</label>
-                <input type="number" name="scount" min="-1" max="2" value="-1">
-            </div>
-
-            <div>
-                <label>アウト</label>
-                <input type="number" name="ocount" min="-1" max="2" value="-1">
-            </div>
-
-        </div>
-
-    </div>
-
-    <div class="card">
-
-        <label>ランナー条件</label>
-
-        <div class="base-area">
-
-            <div>
-                <label>1塁</label>
-                <input type="number" name="fflag" min="-1" max="1" value="-1">
-            </div>
-
-            <div>
-                <label>2塁</label>
-                <input type="number" name="sflag" min="-1" max="1" value="-1">
-            </div>
-
-            <div>
-                <label>3塁</label>
-                <input type="number" name="tflag" min="-1" max="1" value="-1">
-            </div>
-
-        </div>
-        <div class="finish">
-            <div>
-                <label>打席終了球のみ</label>
-                <input type="checkbox" name="finish" value="1">
-            </div>
-        </div>
-    </div>
-
-    <input type="submit" value="配球チャート表示">
-
-    </form>
-
-    </div>
-
-    </body>
-    </html>
-    """
-
-    return bs
+    return render_template(
+        "form.html",
+        results=results_p,
+        side="投手",
+        page="/p_output"
+    )
 
 
 @app.route('/p_output', methods=["GET", "POST"])
@@ -1036,8 +506,8 @@ def p_output():
 
     if request.method == "GET":
         return "エラー"
-
-    pitcher = request.form['player']
+    table_rows = []
+    player = request.form['player']
 
     bcount = to_int(request.form['bcount'])
     scount = to_int(request.form['scount'])
@@ -1047,7 +517,7 @@ def p_output():
     sflag = to_int(request.form['sflag'])
     tflag = to_int(request.form['tflag'])
     finish_flag = to_int(request.form.get('finish','0'))
-    filter_list = [Pitchs.pitcher == pitcher]
+    filter_list = [Pitchs.pitcher == player]
 
     if 0 <= bcount <= 3:
         filter_list.append(Pitchs.ball == bcount)
@@ -1078,7 +548,6 @@ def p_output():
     trun = 0
     at_bat = 0
     all_base = 0
-
     obp = 0
     avg = 0
     slg = 0
@@ -1096,38 +565,6 @@ def p_output():
         "シンカー": "#795548",
         "特殊球": "#2d3436"
     }
-
-    head_html = f"""
-    <!DOCTYPE html>
-    <html lang="ja">
-    <head>
-    <title>検索結果</title>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" href="{ url_for('static', filename='style.css') }">
-    </head>
-    <body>
-
-    <h1>検索結果</h1>
-    """
-
-    table_html="""
-    <table>
-        <thead>
-            <tr>
-                <th>日付</th>
-                <th>投手チーム</th>
-                <th>投手</th>
-                <th>打者チーム</th>
-                <th>打者</th>
-                <th>カウント</th>
-                <th>塁状況</th>
-                <th>球種</th>
-                <th>球速</th>
-                <th>結果</th>
-            </tr>
-        </thead>
-        <tbody>
-    """
     pitch_dict = {}
     for result in sql_data:
         key = result.result
@@ -1164,7 +601,7 @@ def p_output():
         # 成績計算
         trun += 1
 
-        if not (result_category == "walk" or result_category == "sacrifice" or result_category == "sac_bunt_fc"):
+        if not (result_category == "walk" or result_category == "sacrifice" or result_category == "sac_bunt_fc" or result_category == "sac_bunt_error"):
             at_bat += 1
 
         if result_category == "hit":
@@ -1175,29 +612,20 @@ def p_output():
             bb += 1
 
         pitch_style = pitch_color.get(result.pitch_type, "#2d3436")
-
-        table_html += f"""
-        <tr class="{row_class}">
-            <td>{date}</td>
-            <td>{result.pitcher_team}</td>
-            <td>{result.pitcher}</td>
-            <td>{result.batter_team}</td>
-            <td>{result.batter}</td>
-            <td>{result.ball}-{result.strike}-{result.outs}</td>
-            <td>{result.third}-{result.second}-{result.first}</td>
-
-            <td class="pitch" style="color:{pitch_style}">
-                {result.pitch_type}
-            </td>
-
-            <td>{result.speed}km/h</td>
-            <td>{result.result}</td>
-        </tr>
-        """
-    table_html += """
-        </tbody>
-    </table>
-    """
+        table_rows.append({
+            "date": date,
+            "pitcher_team": result.pitcher_team,
+            "pitcher": result.pitcher,
+            "batter_team": result.batter_team,
+            "batter": result.batter,
+            "count": f"{result.ball}-{result.strike}-{result.outs}",
+            "base": f"{result.third}-{result.second}-{result.first}",
+            "pitch_type": result.pitch_type,
+            "pitch_style": pitch_style,
+            "speed": result.speed,
+            "result": result.result,
+            "row_class": row_class
+        })
 
     # 成績計算
     if trun:
@@ -1208,21 +636,6 @@ def p_output():
         slg = all_base / at_bat
 
     ops = obp + slg
-
-    score_html = f"""
-    <div class="score">
-        <span>被打率: {avg:.3f}</span>
-        <span>被出塁率: {obp:.3f}</span>
-        <span>被長打率: {slg:.3f}</span>
-        <span>被OPS: {ops:.3f}</span>
-    </div>
-    """
-
-    head_html = head_html.replace("<h1>検索結果</h1>", f"<h1>検索結果</h1>{score_html}")
-    table_html += """
-    </body>
-    </html>
-    """
     #=======================
     #   プロットと円グラフ  
     #=======================
@@ -1317,7 +730,7 @@ def p_output():
     )
 
     plt.title(
-        f"{pitcher} 配球チャート",
+        f"{player} 配球チャート",
         fontsize=24,
         fontproperties=font_prop
     )
@@ -1425,211 +838,16 @@ def p_output():
             ),
             "color": "#b2bec3"
         })
-
-    chart_data = new_chart_data
-
-    data_list_str = json.dumps(
-        chart_data,
-        ensure_ascii=False
+    return render_template(
+    "result.html",
+    avg=avg,
+    obp=obp,
+    slg=slg,
+    ops=ops,
+    player=player,
+    img_base64=img_base64,
+    data_list=new_chart_data,
+    table_rows=table_rows
     )
-    circle_gragh = f"""
-    <h1>{pitcher} 配球分析</h1>
-
-    <div class="main">
-
-        <div class="card chart-card">
-
-            <h2>球種割合</h2>
-
-            <canvas id="pieChart"
-                    width="350"
-                    height="350">
-            </canvas>
-
-            <div class="legend"
-                 id="legend">
-            </div>
-
-        </div>
-
-        <div class="card plot-card">
-
-            <h2>配球チャート</h2>
-
-            <img
-                src="data:image/png;base64,{img_base64}"
-            >
-
-        </div>
-
-    </div>
-
-    <script>
-
-    const data = {data_list_str};
-
-    const canvas =
-        document.getElementById("pieChart");
-
-    const ctx =
-        canvas.getContext("2d");
-
-    const centerX =
-        canvas.width / 2;
-
-    const centerY =
-        canvas.height / 2;
-
-    const radius = 145;
-
-    // 12時開始
-    let startAngle = -Math.PI / 2;
-
-    data.forEach(item => {{
-
-        const sliceAngle =
-            (item.value / 100)
-            * Math.PI * 2;
-
-        ctx.beginPath();
-
-        ctx.moveTo(
-            centerX,
-            centerY
-        );
-
-        ctx.arc(
-            centerX,
-            centerY,
-            radius,
-            startAngle,
-            startAngle + sliceAngle
-        );
-
-        ctx.closePath();
-
-        ctx.fillStyle =
-            item.color;
-
-        ctx.fill();
-
-        ctx.strokeStyle =
-            "white";
-
-        ctx.lineWidth = 3;
-
-        ctx.stroke();
-
-        // 小さい要素は外側
-        const middleAngle =
-            startAngle + sliceAngle / 2;
-
-        const textRadius =
-            item.value >= 10 ? 90 : 120;
-
-        const textX =
-            centerX
-            + Math.cos(middleAngle) * textRadius;
-
-        const textY =
-            centerY
-            + Math.sin(middleAngle) * textRadius;
-
-        ctx.fillStyle = "white";
-
-        ctx.font =
-            "bold 16px sans-serif";
-
-        ctx.textAlign = "center";
-
-        // 5%以上のみ描画
-        if(item.value >= 5){{
-
-            ctx.fillText(
-                item.value + "%",
-                textX,
-                textY
-            );
-
-        }}
-
-        startAngle += sliceAngle;
-
-    }});
-
-    // ドーナツ化
-    ctx.globalCompositeOperation =
-        "destination-out";
-
-    ctx.beginPath();
-
-    ctx.arc(
-        centerX,
-        centerY,
-        55,
-        0,
-        Math.PI * 2
-    );
-
-    ctx.fill();
-
-    ctx.globalCompositeOperation =
-        "source-over";
-
-    // 中央文字
-    ctx.fillStyle = "#2d3436";
-
-    ctx.font = "bold 20px sans-serif";
-
-    ctx.textAlign = "center";
-
-    ctx.fillText(
-        "球種",
-        centerX,
-        centerY - 5
-    );
-
-    ctx.fillText(
-        "割合",
-        centerX,
-        centerY + 25
-    );
-
-    // 凡例
-    const legend =
-        document.getElementById("legend");
-
-    data.forEach((item, index) => {{
-
-        legend.innerHTML += `
-
-        <div class="item">
-
-            <div class="color"
-                 style="background:${{item.color}}">
-            </div>
-
-            <div>
-
-                <b>
-                    ${{index + 1}}.
-                    ${{item.name}}
-                </b>
-
-                <br>
-
-                ${{item.count}}球
-                (${{item.value}}%)
-
-            </div>
-
-        </div>
-        `;
-    }});
-
-    </script>
-    """
-    
-    return head_html+circle_gragh+"<br><br>"+table_html
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)

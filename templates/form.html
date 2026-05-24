@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <title>{{side}}側検索フォーム</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>{{side}}側フォーム</h1>
+
+        <form action="{{ page }}" method="post">
+
+            <label for="player">{{side}}選択</label>
+
+            <select name="player" id="player">
+                <option value="">--1つ選択してください--</option>
+                {% for name in results %}
+                
+                    <option value="{{ name }}">
+                        {{ name }}
+                    </option>
+                
+                {% endfor %}
+
+            </select>
+            
+            <div class="card">
+            
+                <label>カウント</label>
+            
+                <div class="count-area">
+            
+                    <div>
+                        <label>ボール</label>
+                        <input type="number" name="bcount" min="-1" max="3" value="-1">
+                    </div>
+            
+                    <div>
+                        <label>ストライク</label>
+                        <input type="number" name="scount" min="-1" max="2" value="-1">
+                    </div>
+            
+                    <div>
+                        <label>アウト</label>
+                        <input type="number" name="ocount" min="-1" max="2" value="-1">
+                    </div>
+            
+                </div>
+            
+            </div>
+            
+            <div class="card">
+            
+                <label>ランナー状況</label>
+            
+                <div class="base-area">
+            
+                    <div>
+                        <label>1塁</label>
+                        <input type="number" name="fflag" min="-1" max="1" value="-1">
+                    </div>
+            
+                    <div>
+                        <label>2塁</label>
+                        <input type="number" name="sflag" min="-1" max="1" value="-1">
+                    </div>
+            
+                    <div>
+                        <label>3塁</label>
+                        <input type="number" name="tflag" min="-1" max="1" value="-1">
+                    </div>
+            
+                </div>
+                <div class="finish">
+                    <div>
+                        <label>打席終了球のみ</label>
+                        <input type="checkbox" name="finish" value="1">
+                    </div>
+                </div>
+            
+            </div>
+            
+            <input type="submit" value="検索">
+        </form>            
+    </div>
+            
+</body>            
+</html>
