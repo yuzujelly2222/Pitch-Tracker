@@ -1,0 +1,877 @@
+{
+    "ボール": {
+        "category": "pitch",
+        "type": "ball",
+        "out": 0,
+        "base": 0,
+        "is_terminal": false
+    },
+    "ストライク": {
+        "category": "pitch",
+        "type": "strike",
+        "out": 0,
+        "base": 0,
+        "is_terminal": false
+    },
+    "見逃し": {
+        "category": "pitch",
+        "type": "called_strike",
+        "out": 0,
+        "base": 0,
+        "is_terminal": false
+    },
+    "空振り": {
+        "category": "pitch",
+        "type": "swinging_strike",
+        "out": 0,
+        "base": 0,
+        "is_terminal": false
+    },
+    "ファウル": {
+        "category": "pitch",
+        "type": "foul",
+        "out": 0,
+        "base": 0,
+        "is_terminal": false
+    },
+    "見三振": {
+        "category": "strikeout",
+        "type": "called",
+        "out": 1,
+        "base": 0,
+        "is_terminal": true
+    },
+    "空三振": {
+        "category": "strikeout",
+        "type": "swinging",
+        "out": 1,
+        "base": 0,
+        "is_terminal": true
+    },
+    "バ三振": {
+        "category": "strikeout",
+        "type": "bunt",
+        "out": 1,
+        "base": 0,
+        "is_terminal": true
+    },
+    "逸振逃": {
+        "category": "strikeout",
+        "type": "dropped_third_passed_ball",
+        "out": 1,
+        "base": 1,
+        "is_terminal": true
+    },
+    "暴振逃": {
+        "category": "strikeout",
+        "type": "dropped_third_wild_pitch",
+        "out": 1,
+        "base": 1,
+        "is_terminal": true
+    },
+    "四球": {
+        "category": "walk",
+        "type": "walk",
+        "out": 0,
+        "base": 1,
+        "is_terminal": true
+    },
+    "故意四": {
+        "category": "walk",
+        "type": "intentional_walk",
+        "out": 0,
+        "base": 1,
+        "is_terminal": true
+    },
+    "死球": {
+        "category": "walk",
+        "type": "hit_by_pitch",
+        "out": 0,
+        "base": 1,
+        "is_terminal": true
+    },
+    "投安": {
+        "category": "hit",
+        "type": "single",
+        "fielder": "P",
+        "base": 1,
+        "out": 0,
+        "is_terminal": true
+    },
+    "捕安": {
+        "category": "hit",
+        "type": "single",
+        "fielder": "C",
+        "base": 1,
+        "out": 0,
+        "is_terminal": true
+    },
+    "一安": {
+        "category": "hit",
+        "type": "single",
+        "fielder": "1B",
+        "base": 1,
+        "out": 0,
+        "is_terminal": true
+    },
+    "二安": {
+        "category": "hit",
+        "type": "single",
+        "fielder": "2B",
+        "base": 1,
+        "out": 0,
+        "is_terminal": true
+    },
+    "三安": {
+        "category": "hit",
+        "type": "single",
+        "fielder": "3B",
+        "base": 1,
+        "out": 0,
+        "is_terminal": true
+    },
+    "遊安": {
+        "category": "hit",
+        "type": "single",
+        "fielder": "SS",
+        "base": 1,
+        "out": 0,
+        "is_terminal": true
+    },
+    "左安": {
+        "category": "hit",
+        "type": "single",
+        "fielder": "LF",
+        "base": 1,
+        "out": 0,
+        "is_terminal": true
+    },
+    "中安": {
+        "category": "hit",
+        "type": "single",
+        "fielder": "CF",
+        "base": 1,
+        "out": 0,
+        "is_terminal": true
+    },
+    "右安": {
+        "category": "hit",
+        "type": "single",
+        "fielder": "RF",
+        "base": 1,
+        "out": 0,
+        "is_terminal": true
+    },
+    "二２": {
+        "category": "hit",
+        "type": "double",
+        "fielder": "2B",
+        "base": 2,
+        "out": 0,
+        "is_terminal": true
+    },
+    "遊２": {
+        "category": "hit",
+        "type": "double",
+        "fielder": "SS",
+        "base": 2,
+        "out": 0,
+        "is_terminal": true
+    },
+    "左２": {
+        "category": "hit",
+        "type": "double",
+        "fielder": "LF",
+        "base": 2,
+        "out": 0,
+        "is_terminal": true
+    },
+    "中２": {
+        "category": "hit",
+        "type": "double",
+        "fielder": "CF",
+        "base": 2,
+        "out": 0,
+        "is_terminal": true
+    },
+    "右２": {
+        "category": "hit",
+        "type": "double",
+        "fielder": "RF",
+        "base": 2,
+        "out": 0,
+        "is_terminal": true
+    },
+    "左３": {
+        "category": "hit",
+        "type": "triple",
+        "fielder": "LF",
+        "base": 3,
+        "out": 0,
+        "is_terminal": true
+    },
+    "中３": {
+        "category": "hit",
+        "type": "triple",
+        "fielder": "CF",
+        "base": 3,
+        "out": 0,
+        "is_terminal": true
+    },
+    "右３": {
+        "category": "hit",
+        "type": "triple",
+        "fielder": "RF",
+        "base": 3,
+        "out": 0,
+        "is_terminal": true
+    },
+    "左本": {
+        "category": "hit",
+        "type": "home_run",
+        "fielder": "LF",
+        "base": 4,
+        "out": 0,
+        "is_terminal": true
+    },
+    "中本": {
+        "category": "hit",
+        "type": "home_run",
+        "fielder": "CF",
+        "base": 4,
+        "out": 0,
+        "is_terminal": true
+    },
+    "右本": {
+        "category": "hit",
+        "type": "home_run",
+        "fielder": "RF",
+        "base": 4,
+        "out": 0,
+        "is_terminal": true
+    },
+    "左中本": {
+        "category": "hit",
+        "type": "home_run",
+        "fielder": [
+            "LF",
+            "CF"
+        ],
+        "base": 4,
+        "out": 0,
+        "is_terminal": true
+    },
+    "右中本": {
+        "category": "hit",
+        "type": "home_run",
+        "fielder": [
+            "RF",
+            "CF"
+        ],
+        "base": 4,
+        "out": 0,
+        "is_terminal": true
+    },
+    "右走本": {
+        "category": "hit",
+        "type": "inside_the_park_home_run",
+        "fielder": "RF",
+        "base": 4,
+        "out": 0,
+        "is_terminal": true
+    },
+    "投ゴロ": {
+        "category": "out",
+        "type": "groundout",
+        "fielder": "P",
+        "out": 1,
+        "is_terminal": true
+    },
+    "捕ゴロ": {
+        "category": "out",
+        "type": "groundout",
+        "fielder": "C",
+        "out": 1,
+        "is_terminal": true
+    },
+    "一ゴロ": {
+        "category": "out",
+        "type": "groundout",
+        "fielder": "1B",
+        "out": 1,
+        "is_terminal": true
+    },
+    "二ゴロ": {
+        "category": "out",
+        "type": "groundout",
+        "fielder": "2B",
+        "out": 1,
+        "is_terminal": true
+    },
+    "三ゴロ": {
+        "category": "out",
+        "type": "groundout",
+        "fielder": "3B",
+        "out": 1,
+        "is_terminal": true
+    },
+    "遊ゴロ": {
+        "category": "out",
+        "type": "groundout",
+        "fielder": "SS",
+        "out": 1,
+        "is_terminal": true
+    },
+    "左ゴロ": {
+        "category": "out",
+        "type": "groundout",
+        "fielder": "LF",
+        "out": 1,
+        "is_terminal": true
+    },
+    "中ゴロ": {
+        "category": "out",
+        "type": "groundout",
+        "fielder": "CF",
+        "out": 1,
+        "is_terminal": true
+    },
+    "右ゴロ": {
+        "category": "out",
+        "type": "groundout",
+        "fielder": "RF",
+        "out": 1,
+        "is_terminal": true
+    },
+    "投飛": {
+        "category": "out",
+        "type": "flyout",
+        "fielder": "P",
+        "out": 1,
+        "is_terminal": true
+    },
+    "捕飛": {
+        "category": "out",
+        "type": "flyout",
+        "fielder": "C",
+        "out": 1,
+        "is_terminal": true
+    },
+    "一飛": {
+        "category": "out",
+        "type": "flyout",
+        "fielder": "1B",
+        "out": 1,
+        "is_terminal": true
+    },
+    "二飛": {
+        "category": "out",
+        "type": "flyout",
+        "fielder": "2B",
+        "out": 1,
+        "is_terminal": true
+    },
+    "三飛": {
+        "category": "out",
+        "type": "flyout",
+        "fielder": "3B",
+        "out": 1,
+        "is_terminal": true
+    },
+    "遊飛": {
+        "category": "out",
+        "type": "flyout",
+        "fielder": "SS",
+        "out": 1,
+        "is_terminal": true
+    },
+    "左飛": {
+        "category": "out",
+        "type": "flyout",
+        "fielder": "LF",
+        "out": 1,
+        "is_terminal": true
+    },
+    "中飛": {
+        "category": "out",
+        "type": "flyout",
+        "fielder": "CF",
+        "out": 1,
+        "is_terminal": true
+    },
+    "右飛": {
+        "category": "out",
+        "type": "flyout",
+        "fielder": "RF",
+        "out": 1,
+        "is_terminal": true
+    },
+    "捕邪飛": {
+        "category": "out",
+        "type": "foul_fly",
+        "fielder": "C",
+        "out": 1,
+        "is_terminal": true
+    },
+    "一邪飛": {
+        "category": "out",
+        "type": "foul_fly",
+        "fielder": "1B",
+        "out": 1,
+        "is_terminal": true
+    },
+    "二邪飛": {
+        "category": "out",
+        "type": "foul_fly",
+        "fielder": "2B",
+        "out": 1,
+        "is_terminal": true
+    },
+    "三邪飛": {
+        "category": "out",
+        "type": "foul_fly",
+        "fielder": "3B",
+        "out": 1,
+        "is_terminal": true
+    },
+    "遊邪飛": {
+        "category": "out",
+        "type": "foul_fly",
+        "fielder": "SS",
+        "out": 1,
+        "is_terminal": true
+    },
+    "左邪飛": {
+        "category": "out",
+        "type": "foul_fly",
+        "fielder": "LF",
+        "out": 1,
+        "is_terminal": true
+    },
+    "右邪飛": {
+        "category": "out",
+        "type": "foul_fly",
+        "fielder": "RF",
+        "out": 1,
+        "is_terminal": true
+    },
+    "投直": {
+        "category": "out",
+        "type": "lineout",
+        "fielder": "P",
+        "out": 1,
+        "is_terminal": true
+    },
+    "一直": {
+        "category": "out",
+        "type": "lineout",
+        "fielder": "1B",
+        "out": 1,
+        "is_terminal": true
+    },
+    "二直": {
+        "category": "out",
+        "type": "lineout",
+        "fielder": "2B",
+        "out": 1,
+        "is_terminal": true
+    },
+    "三直": {
+        "category": "out",
+        "type": "lineout",
+        "fielder": "3B",
+        "out": 1,
+        "is_terminal": true
+    },
+    "遊直": {
+        "category": "out",
+        "type": "lineout",
+        "fielder": "SS",
+        "out": 1,
+        "is_terminal": true
+    },
+    "一邪直": {
+        "category": "out",
+        "type": "foul_lineout",
+        "fielder": "1B",
+        "out": 1,
+        "is_terminal": true
+    },
+    "三邪直": {
+        "category": "out",
+        "type": "foul_lineout",
+        "fielder": "3B",
+        "out": 1,
+        "is_terminal": true
+    },
+    "投併打": {
+        "category": "out",
+        "type": "double_play",
+        "fielder": "P",
+        "out": 2,
+        "is_terminal": true
+    },
+    "捕併打": {
+        "category": "out",
+        "type": "double_play",
+        "fielder": "C",
+        "out": 2,
+        "is_terminal": true
+    },
+    "一併打": {
+        "category": "out",
+        "type": "double_play",
+        "fielder": "1B",
+        "out": 2,
+        "is_terminal": true
+    },
+    "二併打": {
+        "category": "out",
+        "type": "double_play",
+        "fielder": "2B",
+        "out": 2,
+        "is_terminal": true
+    },
+    "三併打": {
+        "category": "out",
+        "type": "double_play",
+        "fielder": "3B",
+        "out": 2,
+        "is_terminal": true
+    },
+    "遊併打": {
+        "category": "out",
+        "type": "double_play",
+        "fielder": "SS",
+        "out": 2,
+        "is_terminal": true
+    },
+    "三重殺": {
+        "category": "out",
+        "type": "triple_play",
+        "out": 3,
+        "is_terminal": true
+    },
+    "投三重殺": {
+        "category": "out",
+        "type": "triple_play",
+        "fielder": "P",
+        "out": 3,
+        "is_terminal": true
+    },
+    "捕三重殺": {
+        "category": "out",
+        "type": "triple_play",
+        "fielder": "C",
+        "out": 3,
+        "is_terminal": true
+    },
+    "一三重殺": {
+        "category": "out",
+        "type": "triple_play",
+        "fielder": "1B",
+        "out": 3,
+        "is_terminal": true
+    },
+    "二三重殺": {
+        "category": "out",
+        "type": "triple_play",
+        "fielder": "2B",
+        "out": 3,
+        "is_terminal": true
+    },
+    "三三重殺": {
+        "category": "out",
+        "type": "triple_play",
+        "fielder": "3B",
+        "out": 3,
+        "is_terminal": true
+    },
+    "遊三重殺": {
+        "category": "out",
+        "type": "triple_play",
+        "fielder": "SS",
+        "out": 3,
+        "is_terminal": true
+    },
+    "左三重殺": {
+        "category": "out",
+        "type": "triple_play",
+        "fielder": "LF",
+        "out": 3,
+        "is_terminal": true
+    },
+    "中三重殺": {
+        "category": "out",
+        "type": "triple_play",
+        "fielder": "CF",
+        "out": 3,
+        "is_terminal": true
+    },
+    "右三重殺": {
+        "category": "out",
+        "type": "triple_play",
+        "fielder": "RF",
+        "out": 3,
+        "is_terminal": true
+    },
+    "投失": {
+        "category": "error",
+        "fielder": "P",
+        "out": 0,
+        "base": 1,
+        "is_terminal": true
+    },
+    "捕失": {
+        "category": "error",
+        "fielder": "C",
+        "out": 0,
+        "base": 1,
+        "is_terminal": true
+    },
+    "一失": {
+        "category": "error",
+        "fielder": "1B",
+        "out": 0,
+        "base": 1,
+        "is_terminal": true
+    },
+    "二失": {
+        "category": "error",
+        "fielder": "2B",
+        "out": 0,
+        "base": 1,
+        "is_terminal": true
+    },
+    "三失": {
+        "category": "error",
+        "fielder": "3B",
+        "out": 0,
+        "base": 1,
+        "is_terminal": true
+    },
+    "遊失": {
+        "category": "error",
+        "fielder": "SS",
+        "out": 0,
+        "base": 1,
+        "is_terminal": true
+    },
+    "左失": {
+        "category": "error",
+        "fielder": "LF",
+        "out": 0,
+        "base": 1,
+        "is_terminal": true
+    },
+    "中失": {
+        "category": "error",
+        "fielder": "CF",
+        "out": 0,
+        "base": 1,
+        "is_terminal": true
+    },
+    "右失": {
+        "category": "error",
+        "fielder": "RF",
+        "out": 0,
+        "base": 1,
+        "is_terminal": true
+    },
+    "投野選": {
+        "category": "fielder_choice",
+        "fielder": "P",
+        "out": 1,
+        "base": 1,
+        "is_terminal": true
+    },
+    "捕野選": {
+        "category": "fielder_choice",
+        "fielder": "C",
+        "out": 1,
+        "base": 1,
+        "is_terminal": true
+    },
+    "一野選": {
+        "category": "fielder_choice",
+        "fielder": "1B",
+        "out": 1,
+        "base": 1,
+        "is_terminal": true
+    },
+    "二野選": {
+        "category": "fielder_choice",
+        "fielder": "2B",
+        "out": 1,
+        "base": 1,
+        "is_terminal": true
+    },
+    "三野選": {
+        "category": "fielder_choice",
+        "fielder": "3B",
+        "out": 1,
+        "base": 1,
+        "is_terminal": true
+    },
+    "遊野選": {
+        "category": "fielder_choice",
+        "fielder": "SS",
+        "out": 1,
+        "base": 1,
+        "is_terminal": true
+    },
+    "左野選": {
+        "category": "fielder_choice",
+        "fielder": "LF",
+        "out": 1,
+        "base": 1,
+        "is_terminal": true
+    },
+    "中野選": {
+        "category": "fielder_choice",
+        "fielder": "CF",
+        "out": 1,
+        "base": 1,
+        "is_terminal": true
+    },
+    "右野選": {
+        "category": "fielder_choice",
+        "fielder": "RF",
+        "out": 1,
+        "base": 1,
+        "is_terminal": true
+    },
+    "投犠打": {
+        "category": "sacrifice",
+        "type": "bunt",
+        "fielder": "P",
+        "out": 1,
+        "is_terminal": true
+    },
+    "捕犠打": {
+        "category": "sacrifice",
+        "type": "bunt",
+        "fielder": "C",
+        "out": 1,
+        "is_terminal": true
+    },
+    "一犠打": {
+        "category": "sacrifice",
+        "type": "bunt",
+        "fielder": "1B",
+        "out": 1,
+        "is_terminal": true
+    },
+    "二犠打": {
+        "category": "sacrifice",
+        "type": "bunt",
+        "fielder": "2B",
+        "out": 1,
+        "is_terminal": true
+    },
+    "三犠打": {
+        "category": "sacrifice",
+        "type": "bunt",
+        "fielder": "3B",
+        "out": 1,
+        "is_terminal": true
+    },
+    "遊犠打": {
+        "category": "sacrifice",
+        "type": "bunt",
+        "fielder": "SS",
+        "out": 1,
+        "is_terminal": true
+    },
+    "左犠打": {
+        "category": "sacrifice",
+        "type": "bunt",
+        "fielder": "LF",
+        "out": 1,
+        "is_terminal": true
+    },
+    "中犠打": {
+        "category": "sacrifice",
+        "type": "bunt",
+        "fielder": "CF",
+        "out": 1,
+        "is_terminal": true
+    },
+    "右犠打": {
+        "category": "sacrifice",
+        "type": "bunt",
+        "fielder": "RF",
+        "out": 1,
+        "is_terminal": true
+    },
+    "左犠飛": {
+        "category": "sacrifice",
+        "type": "fly",
+        "fielder": "LF",
+        "out": 1,
+        "is_terminal": true
+    },
+    "中犠飛": {
+        "category": "sacrifice",
+        "type": "fly",
+        "fielder": "CF",
+        "out": 1,
+        "is_terminal": true
+    },
+    "右犠飛": {
+        "category": "sacrifice",
+        "type": "fly",
+        "fielder": "RF",
+        "out": 1,
+        "is_terminal": true
+    },
+    "投犠野": {
+        "category": "sac_bunt_fc",
+        "fielder": "P",
+        "out": 1,
+        "base": 1,
+        "is_terminal": true
+    },
+    "捕犠野": {
+        "category": "sac_bunt_fc",
+        "fielder": "C",
+        "out": 1,
+        "base": 1,
+        "is_terminal": true
+    },
+    "一犠野": {
+        "category": "sac_bunt_fc",
+        "fielder": "1B",
+        "out": 1,
+        "base": 1,
+        "is_terminal": true
+    },
+    "二犠野": {
+        "category": "sac_bunt_fc",
+        "fielder": "2B",
+        "out": 1,
+        "base": 1,
+        "is_terminal": true
+    },
+    "三犠野": {
+        "category": "sac_bunt_fc",
+        "fielder": "3B",
+        "out": 1,
+        "base": 1,
+        "is_terminal": true
+    },
+    "遊犠野": {
+        "category": "sac_bunt_fc",
+        "fielder": "SS",
+        "out": 1,
+        "base": 1,
+        "is_terminal": true
+    },
+    "犠打失":{
+        "category":"sac_bunt_error",
+        "fielder": "SS",
+        "out":0,
+        "base":1,
+        "is_terminal":true
+    }
+}
