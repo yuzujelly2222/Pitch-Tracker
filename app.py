@@ -1,3 +1,8 @@
+#======================
+# ライブラリのインポート
+# 及び専用関数の定義
+#======================
+
 from flask import Flask, request,render_template,url_for
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker, declarative_base
@@ -5,16 +10,22 @@ from sqlalchemy import Column, Integer, Float, String, Date
 import json
 import matplotlib.pyplot as plt
 import matplotlib.patches as ptc
-import matplotlib.patches as mpatches
 import matplotlib.font_manager as fm
 import numpy as np
 import io
 import base64
+
+# このプロジェクトで有用なint型キャスト関数
 def to_int(k):
     try:
         return int(k)
     except:
         return -1
+#=======================
+# DBORMとmysql(mariaDB)
+# の接続
+#=======================
+
 user = "baseball"
 password = "DIzv_ak79BKO4/hY"
 host = "localhost"
@@ -69,9 +80,6 @@ class Games(Base):
     date = Column(Date)
     home_team = Column(String(255))
     visitor_team = Column(String(255))
-
-    def __repr__(self):
-        return f"<Games(id={self.id}, stadium={self.stadium})>"
 
 
 class Bats(Base):
