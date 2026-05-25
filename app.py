@@ -21,33 +21,10 @@ def to_int(k):
         return int(k)
     except:
         return -1
-#=======================
-# DBORMとmysql(mariaDB)
-# の接続
-#=======================
-
-user = "baseball"
-password = "DIzv_ak79BKO4/hY"
-host = "localhost"
-db_name = "baseball"
-
-# engineの設定
-engine = create_engine(
-    f'mysql+mysqlconnector://{user}:{password}@{host}/{db_name}'
-)
-
-# セッションの作成
-db_session = scoped_session(
-    sessionmaker(
-        autocommit=False,
-        autoflush=False,
-        bind=engine
-    )
-)
-
-# Base
-Base = declarative_base()
-Base.query = db_session.query_property()
+#==========================
+# 投球プロット用のグラフのxy
+# 及びストライクゾーンの設定
+#==========================
 X_MIN = 0
 X_MAX = 0
 
@@ -72,6 +49,35 @@ ZONE_Y = [
     STRIKE_Y + STRIKE_HEIGHT / 3 * 2
 ]
 
+#=======================
+# DBORMとmysql(mariaDB)
+# の接続
+#=======================
+
+user = "youruser"
+password = "yourpassword"
+host = "yourhost"
+db_name = "yourdbname"
+
+# engineの設定
+engine = create_engine(
+    f'mysql+mysqlconnector://{user}:{password}@{host}/{db_name}'
+)
+
+# セッションの作成
+db_session = scoped_session(
+    sessionmaker(
+        autocommit=False,
+        autoflush=False,
+        bind=engine
+    )
+)
+
+# Base
+Base = declarative_base()
+Base.query = db_session.query_property()
+
+# ゲームごと分割テーブルのクラス
 class Games(Base):
     __tablename__ = "games"
 
@@ -81,7 +87,7 @@ class Games(Base):
     home_team = Column(String(255))
     visitor_team = Column(String(255))
 
-
+# 打席分割ごとのテーブルのクラス
 class Bats(Base):
     __tablename__ = "at_bat"
 
@@ -91,7 +97,7 @@ class Bats(Base):
     batter = Column(String(255))
     pitcher = Column(String(255))
 
-
+# 1球ごとのテーブルのクラス
 class Pitchs(Base):
     __tablename__ = "pitches"
 
@@ -126,6 +132,12 @@ class Pitchs(Base):
 
 
 Base.metadata.create_all(bind=engine)
+
+#====================
+# 投手と打者の全選手
+# (選択肢リストの作成)
+#====================
+
 results_b = []
 results_p = []
 for result in db_session.query(Pitchs).all():
@@ -133,14 +145,20 @@ for result in db_session.query(Pitchs).all():
         results_b.append(result.batter)
     if not result.pitcher in results_p:
         results_p.append(result.pitcher)
+
+#======================
+# 以下メインのappの作成
+#======================
+
+
 app = Flask(__name__)
 
-
+# トップページ
 @app.route('/')
 def index():
     return render_template('./index.html')
 
-
+# 打者側インプットページ
 @app.route('/b_input')
 def b_input():
     return render_template(
@@ -150,12 +168,16 @@ def b_input():
         page="/b_output"
     )
 
+# 打者側アウトプットページ
 @app.route('/b_output', methods=["GET", "POST"])
 def b_output():
 
     if request.method == "GET":
         return "エラー"
+    
+    # 円グラフ用データリスト 
     table_rows = []
+    # POSTメソッドよりデータをゲット
     player = request.form['player']
 
     bcount = to_int(request.form['bcount'])
@@ -166,8 +188,11 @@ def b_output():
     sflag = to_int(request.form['sflag'])
     tflag = to_int(request.form['tflag'])
     finish_flag = to_int(request.form.get('finish','0'))
+    
+    # テーブル検索条件リストの作成
     filter_list = [Pitchs.batter == player]
 
+    # 以下で条件を追加
     if 0 <= bcount <= 3:
         filter_list.append(Pitchs.ball == bcount)
 
@@ -185,9 +210,11 @@ def b_output():
 
     if 0 <= tflag <= 1:
         filter_list.append(Pitchs.third == tflag)
-
+    
+    # Pitchsテーブルよりデータを取得
     sql_data = db_session.query(Pitchs).filter(*filter_list).all()
 
+    # 結果判定用のjson,result.jsonをロード
     with open("result.json", mode="rt", encoding="utf-8") as f:
         all_data = json.load(f)
 
@@ -214,23 +241,31 @@ def b_output():
         "シンカー": "#795548",
         "特殊球": "#2d3436"
     }
+
     pitch_dict = {}
+    
     for result in sql_data:
+        # result.json検索用のkeyを保存
         key = result.result
+
+        # 終了球のみ検索のとき終了球以外のときcontinueで省く
         if (not all_data[key]["is_terminal"]) and finish_flag:
             continue
+
+        # 初めての変化球の時だけpitch_dictの中に座標用dictを追加
         if result.pitch_type not in pitch_dict:
 
             pitch_dict[result.pitch_type] = {
                 "x": [],
                 "y": []
             }
-
+        
+        # pitch_dictに座標を追加
         pitch_dict[result.pitch_type]["x"].append(result.x)
         pitch_dict[result.pitch_type]["y"].append(result.y)
         
 
-
+        #その投球の試合の日付を取得
         date = db_session.query(Games).filter(
             Games.id == db_session.query(Bats).filter(
                 Bats.id == result.at_bat_id
@@ -239,7 +274,7 @@ def b_output():
 
         result_category = all_data[key]["category"]
 
-        # 行カラー
+        # 結果によって行カラーをつける
         if result_category == "hit":
             row_class = "hit"
         elif result_category == "walk":
@@ -248,19 +283,25 @@ def b_output():
             row_class = "out"
 
         # 成績計算
+        # 打席を加算
         trun += 1
 
+        # 打数計算
         if not (result_category == "walk" or result_category == "sacrifice" or result_category == "sac_bunt_fc" or result_category == "sac_bunt_error"):
             at_bat += 1
 
+        # ヒット数,塁打数計算
         if result_category == "hit":
             hit += 1
             all_base += all_data[key]["base"]
 
+        # 四死球加算
         if result_category == "walk":
             bb += 1
-
+        
+        # 球種によって色を付ける
         pitch_style = pitch_color.get(result.pitch_type, "#2d3436")
+        # htmlに渡すtable_rowsにデータを追加
         table_rows.append({
             "date": date,
             "pitcher_team": result.pitcher_team,
@@ -305,14 +346,18 @@ def b_output():
     # matplotlib配球図
     # =========================
 
+    # フォントをロード
     font_path = "/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc"
     font_prop = fm.FontProperties(fname=font_path)
 
+    # plt初期化
     fig, ax = plt.subplots(figsize=(8, 8))
 
+    # 背景色を設定
     fig.patch.set_facecolor("#f5f6fa")
     ax.set_facecolor("white")
 
+    # ストライクゾーンを設定
     strike_zone = ptc.Rectangle(
         (STRIKE_X, STRIKE_Y),
         STRIKE_WIDTH,
@@ -321,7 +366,6 @@ def b_output():
         edgecolor="#0984e3",
         linewidth=4
     )
-
     ax.add_patch(strike_zone)
 
     # ゾーン分割
@@ -361,29 +405,30 @@ def b_output():
             linewidths=1.2
         )
 
+    # 軸の上限,軸ラベルを設定
     plt.xlim(X_MIN, X_MAX)
     plt.ylim(Y_MIN, Y_MAX)
     plt.xticks(np.arange(X_MIN, X_MAX + 1, 10))
     plt.yticks(np.arange(Y_MIN, Y_MAX + 1, 10))
-
     plt.xlabel(
         "横方向",
         fontsize=15,
         fontproperties=font_prop
     )
-
     plt.ylabel(
         "高さ",
         fontsize=15,
         fontproperties=font_prop
     )
 
+    # タイトルの設定
     plt.title(
         f"{player} 配球チャート",
         fontsize=24,
         fontproperties=font_prop
     )
 
+    # グリッド線の設定
     plt.grid(
         color="#dfe6e9",
         linestyle="--",
@@ -394,6 +439,7 @@ def b_output():
     ax.spines['top'].set_visible(False)
     ax.spines['right'].set_visible(False)
 
+    # yを反転
     ax.invert_yaxis()
 
     plt.axis('equal')
@@ -434,6 +480,7 @@ def b_output():
 
     total = 0
 
+    # pitch_dictから参照してデータを設定
     for key in pitch_dict:
 
         count = len(pitch_dict[key]["x"])
@@ -487,6 +534,7 @@ def b_output():
             ),
             "color": "#b2bec3"
         })
+    
     return render_template(
     "result.html",
     avg=avg,
@@ -499,6 +547,7 @@ def b_output():
     table_rows=table_rows
     )
 
+# 投者側インプットページ
 @app.route('/p_input')
 def p_input():
     return render_template(
@@ -508,13 +557,17 @@ def p_input():
         page="/p_output"
     )
 
-
+# 投者側アウトプットページ
 @app.route('/p_output', methods=["GET", "POST"])
 def p_output():
 
     if request.method == "GET":
         return "エラー"
+
+    # 円グラフ用データリスト
     table_rows = []
+
+    # POSTメソッドよりデータをゲット
     player = request.form['player']
 
     bcount = to_int(request.form['bcount'])
@@ -524,9 +577,12 @@ def p_output():
     fflag = to_int(request.form['fflag'])
     sflag = to_int(request.form['sflag'])
     tflag = to_int(request.form['tflag'])
-    finish_flag = to_int(request.form.get('finish','0'))
+    finish_flag = to_int(request.form.get('finish', '0'))
+
+    # テーブル検索条件リストの作成
     filter_list = [Pitchs.pitcher == player]
 
+    # 以下で条件を追加
     if 0 <= bcount <= 3:
         filter_list.append(Pitchs.ball == bcount)
 
@@ -545,8 +601,10 @@ def p_output():
     if 0 <= tflag <= 1:
         filter_list.append(Pitchs.third == tflag)
 
+    # Pitchsテーブルよりデータを取得
     sql_data = db_session.query(Pitchs).filter(*filter_list).all()
 
+    # 結果判定用のjson,result.jsonをロード
     with open("result.json", mode="rt", encoding="utf-8") as f:
         all_data = json.load(f)
 
@@ -573,11 +631,19 @@ def p_output():
         "シンカー": "#795548",
         "特殊球": "#2d3436"
     }
+
     pitch_dict = {}
+
     for result in sql_data:
+
+        # result.json検索用のkeyを保存
         key = result.result
+
+        # 終了球のみ検索のとき終了球以外のときcontinueで省く
         if (not all_data[key]["is_terminal"]) and finish_flag:
             continue
+
+        # 初めての変化球の時だけpitch_dictの中に座標用dictを追加
         if result.pitch_type not in pitch_dict:
 
             pitch_dict[result.pitch_type] = {
@@ -585,11 +651,11 @@ def p_output():
                 "y": []
             }
 
+        # pitch_dictに座標を追加
         pitch_dict[result.pitch_type]["x"].append(result.x)
         pitch_dict[result.pitch_type]["y"].append(result.y)
-        
 
-
+        # その投球の試合の日付を取得
         date = db_session.query(Games).filter(
             Games.id == db_session.query(Bats).filter(
                 Bats.id == result.at_bat_id
@@ -601,25 +667,35 @@ def p_output():
         # 行カラー
         if result_category == "hit":
             row_class = "hit"
+
         elif result_category == "walk":
             row_class = "walk"
+
         else:
             row_class = "out"
 
         # 成績計算
+
+        # 打席を加算
         trun += 1
 
+        # 打数計算
         if not (result_category == "walk" or result_category == "sacrifice" or result_category == "sac_bunt_fc" or result_category == "sac_bunt_error"):
             at_bat += 1
 
+        # ヒット数,塁打数計算
         if result_category == "hit":
             hit += 1
             all_base += all_data[key]["base"]
 
+        # 四死球加算
         if result_category == "walk":
             bb += 1
 
+        # 球種によって色を付ける
         pitch_style = pitch_color.get(result.pitch_type, "#2d3436")
+
+        # htmlに渡すtable_rowsにデータを追加
         table_rows.append({
             "date": date,
             "pitcher_team": result.pitcher_team,
@@ -644,9 +720,11 @@ def p_output():
         slg = all_base / at_bat
 
     ops = obp + slg
+
     #=======================
-    #   プロットと円グラフ  
+    #   プロットと円グラフ
     #=======================
+
     pitch_colors = {
         'ストレート': '#e74c3c',
         'カットボール': '#e67e22',
@@ -664,14 +742,18 @@ def p_output():
     # matplotlib配球図
     # =========================
 
+    # フォントをロード
     font_path = "/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc"
     font_prop = fm.FontProperties(fname=font_path)
 
+    # plt初期化
     fig, ax = plt.subplots(figsize=(8, 8))
 
+    # 背景色を設定
     fig.patch.set_facecolor("#f5f6fa")
     ax.set_facecolor("white")
 
+    # ストライクゾーンを設定
     strike_zone = ptc.Rectangle(
         (STRIKE_X, STRIKE_Y),
         STRIKE_WIDTH,
@@ -720,6 +802,7 @@ def p_output():
             linewidths=1.2
         )
 
+    # 軸の上限,軸ラベルを設定
     plt.xlim(X_MIN, X_MAX)
     plt.ylim(Y_MIN, Y_MAX)
     plt.xticks(np.arange(X_MIN, X_MAX + 1, 10))
@@ -737,12 +820,14 @@ def p_output():
         fontproperties=font_prop
     )
 
+    # タイトルの設定
     plt.title(
         f"{player} 配球チャート",
         fontsize=24,
         fontproperties=font_prop
     )
 
+    # グリッド線の設定
     plt.grid(
         color="#dfe6e9",
         linestyle="--",
@@ -753,6 +838,7 @@ def p_output():
     ax.spines['top'].set_visible(False)
     ax.spines['right'].set_visible(False)
 
+    # yを反転
     ax.invert_yaxis()
 
     plt.axis('equal')
@@ -793,6 +879,7 @@ def p_output():
 
     total = 0
 
+    # pitch_dictから参照してデータを設定
     for key in pitch_dict:
 
         count = len(pitch_dict[key]["x"])
@@ -846,16 +933,17 @@ def p_output():
             ),
             "color": "#b2bec3"
         })
+
     return render_template(
-    "result.html",
-    avg=avg,
-    obp=obp,
-    slg=slg,
-    ops=ops,
-    player=player,
-    img_base64=img_base64,
-    data_list=new_chart_data,
-    table_rows=table_rows
+        "result.html",
+        avg=avg,
+        obp=obp,
+        slg=slg,
+        ops=ops,
+        player=player,
+        img_base64=img_base64,
+        data_list=new_chart_data,
+        table_rows=table_rows
     )
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
