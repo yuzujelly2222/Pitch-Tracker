@@ -122,7 +122,7 @@ project/
 | id | INT | 投球ID |
 | at_bat_id | INT | 対応する打席ID |
 | inning | INT | イニング |
-| number_of_pitches | INT | 打席内総投球数 |
+| number_of_pitches | INT | 投手の試合内総投球数 |
 | pitch_number | INT | 打席内何球目か |
 | pitcher | VARCHAR(255) | 投手名 |
 | pitcher_team | VARCHAR(255) | 投手チーム |
