@@ -64,7 +64,9 @@ project/
 ├── sql/
 │   └── schema.sql
 ├── static/
-│   └── style.css
+│   ├── style.css
+│   ├── index.css
+│   └── pie_chart.js
 └── templates/
     └── index.html
 ```
@@ -78,7 +80,9 @@ project/
 | requirements.txt | 使用ライブラリ一覧 |
 | README.md | プロジェクト説明 |
 | sql/schema.sql | データベース作成用SQL |
-| static/style.css | CSSファイル |
+| static/style.css | 共通スタイルCSS |
+| static/index.css | トップページ専用CSS |
+| static/pie_chart.js | 円グラフ描画用JavaScript |
 | templates/index.html | トップページHTML |
 
 <p align="right">(<a href="#top">トップへ</a>)</p>
