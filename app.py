@@ -544,7 +544,8 @@ def b_output():
     player=player,
     img_base64=img_base64,
     data_list=new_chart_data,
-    table_rows=table_rows
+    table_rows=table_rows,
+    hi=""
     )
 
 # 投者側インプットページ
@@ -943,7 +944,8 @@ def p_output():
         player=player,
         img_base64=img_base64,
         data_list=new_chart_data,
-        table_rows=table_rows
+        table_rows=table_rows,
+        hi="被"
     )
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
