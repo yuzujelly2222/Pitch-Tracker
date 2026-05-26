@@ -68,6 +68,8 @@ project/
 ├── result.json
 ├── requirements.txt
 ├── README.md
+├── assets/
+|   └── demo.gif
 ├── sql/
 │   └── schema.sql
 ├── static/
