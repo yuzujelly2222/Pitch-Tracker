@@ -14,6 +14,17 @@ import matplotlib.font_manager as fm
 import numpy as np
 import io
 import base64
+from typing import TypedDict
+
+# pitch_dict用型ヒント
+class Dataset(TypedDict):
+    backgroundColor: list[str]
+    data: list[int]
+
+class ChartData(TypedDict):
+    labels: list[str]
+    datasets: list[Dataset]
+
 
 # このプロジェクトで有用なint型キャスト関数
 def to_int(k):
@@ -476,65 +487,17 @@ def b_output():
     # 円グラフデータ
     # =========================
 
-    chart_data = []
+    chart_data:ChartData = {"labels":[],"datasets":[{"backgroundColor":[],"data":[]}]}
 
-    total = 0
 
-    # pitch_dictから参照してデータを設定
+
     for key in pitch_dict:
 
         count = len(pitch_dict[key]["x"])
 
-        total += count
-
-        chart_data.append({
-            "name": "不明" if key is None else key,
-            "count": count,
-            "color": pitch_colors.get(key, "#636e72")
-        })
-
-    # パーセント計算
-    for item in chart_data:
-
-        item["value"] = round(
-            item["count"] / total * 100,
-            1
-        )
-
-    # 降順
-    chart_data = sorted(
-        chart_data,
-        key=lambda x: x["value"],
-        reverse=True
-    )
-
-    # 小さい割合をその他へ
-    new_chart_data = []
-
-    other_count = 0
-
-    for item in chart_data:
-
-        if item["value"] < 3:
-
-            other_count += item["count"]
-
-        else:
-
-            new_chart_data.append(item)
-
-    if other_count > 0:
-
-        new_chart_data.append({
-            "name": "その他",
-            "count": other_count,
-            "value": round(
-                other_count / total * 100,
-                1
-            ),
-            "color": "#b2bec3"
-        })
-    
+        chart_data["labels"].append(key)
+        chart_data["datasets"][0]["backgroundColor"].append(pitch_color.get(key,"#636e72"))
+        chart_data["datasets"][0]["data"].append(count)
     return render_template(
     "result.html",
     avg=avg,
@@ -543,7 +506,7 @@ def b_output():
     ops=ops,
     player=player,
     img_base64=img_base64,
-    data_list=new_chart_data,
+    data_list=chart_data,
     table_rows=table_rows,
     hi=""
     )
@@ -876,76 +839,28 @@ def p_output():
     # 円グラフデータ
     # =========================
 
-    chart_data = []
+    chart_data:ChartData = {"labels":[],"datasets":[{"backgroundColor":[],"data":[]}]}
 
-    total = 0
 
-    # pitch_dictから参照してデータを設定
+
     for key in pitch_dict:
 
         count = len(pitch_dict[key]["x"])
 
-        total += count
-
-        chart_data.append({
-            "name": "不明" if key is None else key,
-            "count": count,
-            "color": pitch_colors.get(key, "#636e72")
-        })
-
-    # パーセント計算
-    for item in chart_data:
-
-        item["value"] = round(
-            item["count"] / total * 100,
-            1
-        )
-
-    # 降順
-    chart_data = sorted(
-        chart_data,
-        key=lambda x: x["value"],
-        reverse=True
-    )
-
-    # 小さい割合をその他へ
-    new_chart_data = []
-
-    other_count = 0
-
-    for item in chart_data:
-
-        if item["value"] < 3:
-
-            other_count += item["count"]
-
-        else:
-
-            new_chart_data.append(item)
-
-    if other_count > 0:
-
-        new_chart_data.append({
-            "name": "その他",
-            "count": other_count,
-            "value": round(
-                other_count / total * 100,
-                1
-            ),
-            "color": "#b2bec3"
-        })
-
+        chart_data["labels"].append(key)
+        chart_data["datasets"][0]["backgroundColor"].append(pitch_color.get(key,"#636e72"))
+        chart_data["datasets"][0]["data"].append(count)
     return render_template(
-        "result.html",
-        avg=avg,
-        obp=obp,
-        slg=slg,
-        ops=ops,
-        player=player,
-        img_base64=img_base64,
-        data_list=new_chart_data,
-        table_rows=table_rows,
-        hi="被"
+    "result.html",
+    avg=avg,
+    obp=obp,
+    slg=slg,
+    ops=ops,
+    player=player,
+    img_base64=img_base64,
+    data_list=chart_data,
+    table_rows=table_rows,
+    hi="被"
     )
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)

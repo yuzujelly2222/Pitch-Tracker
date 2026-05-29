@@ -7,7 +7,7 @@
     <meta charset="UTF-8">
 
     <link rel="stylesheet" href="{{ url_for('static',filename='style.css') }}">
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js"></script>
     <script defer src="{{ url_for('static', filename='pie_char.js') }}">
     </script>
 </head>
@@ -48,13 +48,10 @@
 
             <h2>球種割合</h2>
 
-            <canvas id="pieChart"
-                    width="350"
-                    height="350">
+            <canvas id="pieChart" width="350" height="350">
             </canvas>
 
-            <div class="legend"
-                 id="legend">
+            <div class="legend" id="legend">
             </div>
 
         </div>
@@ -98,11 +95,11 @@
         </thead>
 
         <tbody>
-        
+
             {% for row in table_rows %}
-        
+
             <tr class="{{ row.row_class }}">
-        
+
                 <td>{{ row.date }}</td>
                 <td>{{ row.pitcher_team }}</td>
                 <td>{{ row.pitcher }}</td>
@@ -110,21 +107,22 @@
                 <td>{{ row.batter }}</td>
                 <td>{{ row.count }}</td>
                 <td>{{ row.base }}</td>
-        
+
                 <td class="pitch" style="color:{{ row.pitch_style }}">
                     {{ row.pitch_type }}
                 </td>
-        
+
                 <td>{{ row.speed }}km/h</td>
                 <td>{{ row.result }}</td>
-        
+
             </tr>
-        
+
             {% endfor %}
-        
+
         </tbody>
 
     </table>
 
 </body>
+
 </html>
