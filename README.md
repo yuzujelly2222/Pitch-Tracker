@@ -1,5 +1,13 @@
 # Pitch Tracker
 
+
+![Python](https://img.shields.io/badge/Python-3776AB?logo=python&logoColor=white)
+![Flask](https://img.shields.io/badge/Flask-000000?logo=flask&logoColor=white)
+![MariaDB](https://img.shields.io/badge/MariaDB-003545?logo=mariadb&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=black)
+![Chart.js](https://img.shields.io/badge/Chartjs-FF6384?logo=chartdotjs&logoColor=white)
+![matplotlib](https://img.shields.io/badge/matplotlib-11557C)
+
 <div id="top"></div>
 
 ## プロジェクトについて
@@ -25,6 +33,13 @@ DB に保存された投球データをもとに：
 ---
 
 ## 使用技術
+
+### Frontend
+
+- HTML
+- CSS
+- JavaScript
+- Chart.js
 
 ### Backend
 
