@@ -81,6 +81,7 @@ DB に保存された投球データをもとに：
 ```text
 project/
 ├── app.py
+├── LICENCE
 ├── result.json
 ├── requirements.txt
 ├── README.md
